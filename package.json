@@ -1,0 +1,40 @@
+{
+  "name": "redux-remotes",
+  "version": "0.0.1",
+  "description": "Remotes",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "rimraf lib dist",
+    "build": "babel src --out-dir lib",
+    "build:watch": "watch 'npm run build' ./src",
+    "test": "NODE_ENV=test mocha --compilers js:babel/register --recursive",
+    "test:watch": "NODE_ENV=test mocha --compilers js:babel/register --recursive --watch",
+    "test:cov": "babel-node ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- --recursive",
+    "prepublish": "npm run test && npm run clean && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rt2zz/redux-remotes.git"
+  },
+  "homepage": "https://github.com/rt2zz/redux-remotes",
+  "keywords": [
+    "redux",
+    "middleware",
+    "redux-middleware",
+    "flux"
+  ],
+  "author": {
+    "name": "Zack Story",
+    "email": "zack@root-two.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^5.6.14",
+    "babel-core": "^5.6.15",
+    "babel-eslint": "^3.1.20"
+  },
+  "dependencies": {
+    "invariant": "^2.1.0",
+    "lodash": "^3.10.0"
+  }
+}
