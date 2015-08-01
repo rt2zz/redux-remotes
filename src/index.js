@@ -1,6 +1,8 @@
 import _ from 'lodash'
 import invariant from 'invariant'
 
+//@TODO need to figure out how this plays with action replay and other redux enhancers
+
 export function remotesMiddleware(remote) {
   return ({ dispatch, getState }) => {
     return next => action => {
