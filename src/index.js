@@ -75,7 +75,17 @@ export function createRemote(remotes, config){
         archive.unshift(contract)
         archive = archive.slice(0, 1000)
         if(config.log === true){
-          console.log('%c REMOTE COMPLETE: '+action.type, 'background: #c9f2ac', {action, contract})
+          console.groupCollapsed('%c ' + action.type, 'background: #c9f2ac');
+          console.log('resolved %i remotes', contract.resolved.length, contract.resolved)
+          console.log('dispatched %i child actions', contract.dispatches.length, _.pluck(contract.dispatches, 'type'))
+          console.log('%i contracts outstanding', contracts.length, _.map(contracts, (contract) => contract.action.type))
+
+          console.groupCollapsed('more details')
+          console.log("completed contract: %0", contract)
+          console.log("outstanding contracts: %0", contracts)
+          console.groupEnd()
+
+          console.groupEnd()
         }
       }
     }
