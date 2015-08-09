@@ -75,7 +75,7 @@ export function createRemote(remotes, config){
         archive.unshift(contract)
         archive = archive.slice(0, 1000)
         if(config.log === true){
-          console.log('%c REMOTE COMPLETE: '+action.type, 'background: #c9f2ac', action, contract)
+          console.log('%c REMOTE COMPLETE: '+action.type, 'background: #c9f2ac', {action, contract})
         }
       }
     }
