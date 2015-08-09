@@ -7,10 +7,10 @@
     "clean": "rimraf lib dist",
     "build": "babel src --out-dir lib",
     "build:watch": "watch 'npm run build' ./src",
-    "test": "NODE_ENV=test mocha --compilers js:babel/register --recursive",
-    "test:watch": "NODE_ENV=test mocha --compilers js:babel/register --recursive --watch",
+    "todo:test": "NODE_ENV=test mocha --compilers js:babel/register --recursive",
+    "todo:test:watch": "NODE_ENV=test mocha --compilers js:babel/register --recursive --watch",
     "test:cov": "babel-node ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- --recursive",
-    "prepublish": "npm run test && npm run clean && npm run build"
+    "prepublish": "npm run clean && npm run build"
   },
   "repository": {
     "type": "git",
