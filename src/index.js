@@ -13,6 +13,7 @@ export function remotesMiddleware(remote) {
 }
 
 export function createRemote(remotes, config){
+  let finalRemotes = _.pick(remotes, (val) => typeof val === 'function')
   config = config || {}
 
   let contracts = []
@@ -24,7 +25,7 @@ export function createRemote(remotes, config){
 
   return function combinationRemote(action, dispatch) {
 
-    var keys = _.keys(remotes)
+    var keys = _.keys(finalRemotes)
     var contract = {
       unresolved: keys,
       resolved: [],
@@ -34,8 +35,11 @@ export function createRemote(remotes, config){
 
     contracts.push(contract)
 
-    _.forEach(remotes, (remote, key) => {
-      let handled = remote(action, () => {
+    _.forEach(finalRemotes, (remote, key) => {
+      let handled = remote(action, (finalAction) => {
+        if(typeof finalAction === 'object'){
+          subdispatch(finalAction)
+        }
         resolve(key)
       }, subdispatch)
 
@@ -47,7 +51,7 @@ export function createRemote(remotes, config){
 
     function subdispatch(subaction) {
       contract.dispatches.push(subaction)
-      dipatch(subaction)
+      dispatch(subaction)
     }
 
     function resolve(key){
@@ -57,7 +61,7 @@ export function createRemote(remotes, config){
 
     //same as above but do not add to resolved list
     function noopResolve(key){
-      invariant(contract.unresolved.indexOf(key) !== -1, 'Cannot resolve twice for remote: ', key, ' for Action: ', action.type, '. You either called finish() twice or returned false and called finish()')
+      invariant(contract.unresolved.indexOf(key) !== -1, 'Cannot resolve twice for remote: '+key+' for Action: '+action.type+'. You either called finish() twice or returned false and called finish()')
       contract.unresolved = _.without(contract.unresolved, key)
       if(contract.unresolved.length === 0){
         completeContract()
@@ -70,8 +74,8 @@ export function createRemote(remotes, config){
       if(contract.resolved.length > 0){
         archive.unshift(contract)
         archive = archive.slice(0, 1000)
-        if(config.log){
-          console.log('%c REMOTE COMPLETE: '+action.type, 'background: #a9e2fc', action, contract)
+        if(config.log === true){
+          console.log('%c REMOTE COMPLETE: '+action.type, 'background: #c9f2ac', action, contract)
         }
       }
     }
