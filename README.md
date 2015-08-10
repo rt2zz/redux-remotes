@@ -1,9 +1,30 @@
 # Redux Remotes
-Care for your remote interactions (read: intents or async actions). Observable, serializable, and slightly more declarative.  
+Trigger remote interactions (e.g. async actions) via dispatch.  
 
-**Warning** this is an early experiment.  
+Remotes provides a standard, predicatable, semi-declarative API for handling remote interactions. It is similar to using redux-thunk, except instead of dispatching a function, you dispatch a "command" action which is then handled by a remote. There are potentially a few benefits to this approach:
+* "Command actions" are serializable (as opposed to action creator invocation which is not)
+* Robust and standardized logging
+* See all dispatches that originated from within a remote-action
+* Potential to archive and replay all remote interactions
+* See all oustanding "contracts" at any point in time, which can be really useful for long running remote interactions like geolocation.
+* Apply a remote interaction to multiple or all action types (e.g. remote logging)
+* Apply multiple remote interactions to one source action
+
+Additionally because the structure of remotes mirrors that of reducers, the mental model is light and easy to integrate within an existing redux application.
+
+**Warning** this is an early experiment.
 
 Not necessarily redux specific, but that is the target architecture.
+
+## What does it look like?
+Remotes works as follows:
+1. Compose multiple `remotes` into a single `remote` function (just like you do with reducers
+2. Install the middleware. The middleware sends every action to the registered remote before passing it along.
+3. A contract is created for every action that one more remotes handles.
+4. Each remote calls finish() when it is done operating on an action.
+
+To get a better idea of what this looks like, see the console logging upon contract completion:
+<img src="https://raw.githubusercontent.com/rt2zz/redux-remotes/master/examples/log.png" />
 
 ## Usage
 ```js
@@ -22,36 +43,20 @@ export default function account(action, finish, dispatch) {
   switch (action.type) {
 
   case INCREMENT:
+    //call finish when done operating so the contract can be closed.
     setTimeout(finish, 1000)
+    //return true indicates this remote is going to operate, and the contract should wait for response
     return true
 
   default:
+    //return false if no operation
     return false
   }
 }
 ```
 
-##Action Naming
-Because we are now creating raw actions that represent "intents" some adjustments may need to be made to naming conventions. As intents are now 1-1 to raw actions, we call these "remote actions", and and dispatches that occur within the remote are called "remote actions". Any given remote action may have multiple remote handlers and may still be handled as normal by reducers.
-
-**note** "remote actions" are indistinguishable from normal actions, the only difference is whether you decide to take action in a remote.
-
-Possible naming for restful resources, such as a blog post:
-```js
-//explicit naming/seperation
-REMOTE_PROFILE_CREATE
-PROFILE_CREATE_PENDING
-PROFILE_CREATE_SUCCESS
-PROFILE_CREATE_FAIL
-
-//terse naming
-PROFILE_CREATE
-PROFILE_CREATE_SUCCESS
-PROFILE_CREATE_FAIL
-```
-
 ## Use Cases
-RESTFUL Resource
+Restful Resource
 ```js
 export default function profile(action, finish, dispatch) {
   switch (action.type) {
@@ -123,4 +128,4 @@ export default function alertPipe(action, finish, dispatch) {
 }
 
 ## Uncertainties
-This may need some tweaking to play well with store enhancers like redux-devtools. Further testing and experimentation is needed. Also flowing intents and actions through the same dispatcher may be an anti-pattern, it is possible remotes should hang off of a separate dispatcher.
+This may need some tweaking to play well with store enhancers like redux-devtools. Further testing and experimentation is needed.
