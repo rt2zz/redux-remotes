@@ -17,9 +17,9 @@ Additionally because the structure of remotes mirrors that of reducers, the ment
 Not necessarily redux specific, but that is the target architecture.
 
 ## What does it look like?
-Remotes works as follows:
-1. Compose multiple `remotes` into a single `remote` function (just like you do with reducers
-2. Install the middleware. The middleware sends every action to the registered remote before passing it along.
+Remotes works as follows:  
+1. Compose multiple `remotes` into a single `remote` function (just like you do with reducers  
+2. Install the middleware. The middleware sends every action to the registered remote before passing it along.  
 3. A contract is created for every action that one more remotes handles.
 4. Each remote calls finish() when it is done operating on an action.
 
