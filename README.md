@@ -127,6 +127,7 @@ export default function alertPipe(action, finish, dispatch) {
   default:
     return false
 }
+```
 
 ## Uncertainties
 This may need some tweaking to play well with store enhancers like redux-devtools. Further testing and experimentation is needed.
