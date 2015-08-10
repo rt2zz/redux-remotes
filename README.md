@@ -24,7 +24,8 @@ Remotes works as follows:
 4. Each remote calls finish() when it is done operating on an action.  
 
 To get a better idea of what this looks like, see the console logging upon contract completion:
-<img style="border:2px solid #aaaaaa" src="https://raw.githubusercontent.com/rt2zz/redux-remotes/master/examples/log.png" />
+<hr />
+<img style="border:2px solid #aaaaaa;" src="https://raw.githubusercontent.com/rt2zz/redux-remotes/master/examples/log.png" />
 
 ## Usage
 ```js
