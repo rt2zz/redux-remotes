@@ -98,11 +98,11 @@ export function createRemote(remotes, config){
 }
 
 export function remoteActionMap(map){
-  return (action, dispatch, finish) => {
-    if(!map[action.type]){
+  return (api) => {
+    if(!map[api.action.type]){
       return false
     }
-    map[action.type](action, dispatch, finish)
+    map[api.action.type](api)
     return true
   }
 }
