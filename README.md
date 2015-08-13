@@ -1,18 +1,12 @@
 # Redux Remotes
-Trigger remote interactions (e.g. async actions) via dispatch.  
+Trigger side-effects (e.g. async actions) via dispatch.
 
-Remotes provides a standard, predicatable, semi-declarative API for handling remote interactions. It is similar to using redux-thunk, except instead of dispatching a function, you dispatch a "command" action which is then handled by a remote. There are potentially a few benefits to this approach:
-* "Command actions" are serializable (as opposed to action creator invocation which is not)
+Remotes provides a standard, predicatable API for handling remote interactions. It is similar to using redux-thunk, except instead of dispatching a function, you dispatch a "command" action which is then handled by one or many remotes. There are potentially a few benefits to this approach:
+* Serializable (as opposed to action creator invocation which is not)
 * Robust and standardized logging
-* See all dispatches that originated from within a remote-action
-* Potential to archive and replay all remote interactions
-* See all oustanding "contracts" at any point in time, which can be really useful for long running remote interactions like geolocation.
-* Apply a remote interaction to multiple or all action types (e.g. remote logging)
-* Apply multiple remote interactions to one source action
+* Many side effects can be triggered by one action, or one side effect can be triggered by multiple actions
 
 Additionally because the structure of remotes mirrors that of reducers, the mental model is light and easy to integrate within an existing redux application.
-
-**Warning** this is an early experiment.
 
 Not necessarily redux specific, but that is the target architecture.
 
@@ -40,7 +34,7 @@ in reducers/someReducer.js
 ```js
 import { INCREMENT } from '../constants/ActionTypes'
 
-export default function account(action, finish, dispatch) {
+export default function account({action, getState, finish, dispatch}) {
   switch (action.type) {
 
   case INCREMENT:
@@ -59,7 +53,7 @@ export default function account(action, finish, dispatch) {
 ## Use Cases
 Restful Resource
 ```js
-export default function profile(action, finish, dispatch) {
+export default function profile({action, getState, finish, dispatch}) {
   switch (action.type) {
 
   case PROFILE_CREATE:
@@ -90,7 +84,7 @@ export default function profile(action, finish, dispatch) {
 
 Other times remotes may not need to report their status as actions. For example a remote action logger:
 ```js
-export default function remoteLogger(action, finish, dispatch) {
+export default function remoteLogger({action, getState, finish, dispatch}) {
   remoteLog(action, () => {
     finish()
   })
@@ -100,7 +94,7 @@ export default function remoteLogger(action, finish, dispatch) {
 
 Or a remote stream
 ```js
-export default function alertPipe(action, finish, dispatch) {
+export default function alertPipe({action, getState, finish, dispatch}) {
   switch (action.type) {
 
   let unsubscribe = null
