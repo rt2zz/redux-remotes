@@ -43,7 +43,7 @@ export function createRemote(remotes, config){
       }
     })
 
-    function finish(finalAction) => {
+    function finish(finalAction) {
       if(typeof finalAction === 'object'){
         subdispatch(finalAction)
       }
