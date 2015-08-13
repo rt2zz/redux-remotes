@@ -1,7 +1,7 @@
 # Redux Remotes
-Trigger side-effects (e.g. async actions) via dispatch.
+Trigger side-effects (e.g. async actions) via dispatch. Vaguely similar to cerebral signals or elm side effects.
 
-Remotes provides a standard, predicatable API for handling remote interactions. It is similar to using redux-thunk, except instead of dispatching a function, you dispatch a "command" action which is then handled by one or many remotes. There are potentially a few benefits to this approach:
+Remotes provides a standard, predicatable API for handling async actions. It is similar to using redux-thunk, except instead of dispatching a function, you dispatch a "command" action which is then handled by one or many remotes. There are potentially a few benefits to this approach:
 * Serializable (as opposed to action creator invocation which is not)
 * Robust and standardized logging
 * Many side effects can be triggered by one action, or one side effect can be triggered by multiple actions
