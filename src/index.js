@@ -36,18 +36,19 @@ export function createRemote(remotes, config){
     contracts.push(contract)
 
     _.forEach(finalRemotes, (remote, key) => {
-      let handled = remote(action, (finalAction) => {
-        if(typeof finalAction === 'object'){
-          subdispatch(finalAction)
-        }
-        resolve(key)
-      }, subdispatch)
-
+      let handled = remote(action, subdispatch, finish)
       //if remote explicitly returns false, assume noop
       if(handled === false){
         noopResolve(key)
       }
     })
+
+    function finish(finalAction) => {
+      if(typeof finalAction === 'object'){
+        subdispatch(finalAction)
+      }
+      resolve(key)
+    }
 
     function subdispatch(subaction) {
       contract.dispatches.push(subaction)
@@ -82,7 +83,7 @@ export function createRemote(remotes, config){
           console.log('dispatched %i child actions', contract.dispatches.length, _.pluck(contract.dispatches, 'type'))
           console.log('%i contracts outstanding', contracts.length, _.map(contracts, (contract) => contract.action.type))
 
-          if(groupable){ 
+          if(groupable){
             console.groupCollapsed('more details')
             console.log("completed contract: %0", contract)
             console.log("outstanding contracts: %0", contracts)
@@ -93,5 +94,15 @@ export function createRemote(remotes, config){
         }
       }
     }
+  }
+}
+
+export function remoteActionMap(map){
+  return (action, dispatch, finish) => {
+    if(!map[action.type]){
+      return false
+    }
+    map[action.type](action, dispatch, finish)
+    return true
   }
 }
