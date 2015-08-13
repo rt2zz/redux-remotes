@@ -6,7 +6,7 @@ import invariant from 'invariant'
 export function remotesMiddleware(remote) {
   return ({ dispatch, getState }) => {
     return next => action => {
-      remote(action, dispatch)
+      remote(action, dispatch, getState)
       return next(action)
     }
   }
@@ -23,7 +23,7 @@ export function createRemote(remotes, config){
     console.log('Contracts:',contracts,'Archive:', archive)
   }
 
-  return function combinationRemote(action, dispatch) {
+  return function combinationRemote(action, dispatch, getState) {
 
     var keys = _.keys(finalRemotes)
     var contract = {
@@ -36,7 +36,7 @@ export function createRemote(remotes, config){
     contracts.push(contract)
 
     _.forEach(finalRemotes, (remote, key) => {
-      let handled = remote(action, subdispatch, finish)
+      let handled = remote({action, getState, dispatch: subdispatch, finish})
       //if remote explicitly returns false, assume noop
       if(handled === false){
         noopResolve(key)
