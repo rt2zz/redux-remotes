@@ -41,14 +41,14 @@ export function createRemote(remotes, config){
       if(handled === false){
         noopResolve(key)
       }
-    })
 
-    function finish(finalAction) {
-      if(typeof finalAction === 'object'){
-        subdispatch(finalAction)
+      function finish(finalAction) {
+        if(typeof finalAction === 'object'){
+          subdispatch(finalAction)
+        }
+        resolve(key)
       }
-      resolve(key)
-    }
+    })
 
     function subdispatch(subaction) {
       contract.dispatches.push(subaction)
