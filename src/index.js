@@ -27,6 +27,7 @@ export function createRemote(remotes, config){
 
     var keys = _.keys(finalRemotes)
     var contract = {
+      time: { start: Date.now(), end: undefined },
       unresolved: keys,
       resolved: [],
       dispatches: [],
@@ -70,6 +71,9 @@ export function createRemote(remotes, config){
     }
 
     function completeContract() {
+
+      contract.time.end = Date.now()
+
       contracts = _.without(contracts, contract)
       //only process if something was handled
       if(contract.resolved.length > 0){
@@ -79,11 +83,9 @@ export function createRemote(remotes, config){
           let groupable = typeof console.groupCollapsed === 'function'
 
           var time = new Date()
-          var isCollapsed = typeof collapsed === "function" ? collapsed(getState, action) : collapsed;
-          var formattedTime = timestamp ? " @ " + time.getHours() + ":" + pad(time.getMinutes()) + ":" + pad(time.getSeconds()) : "";
-          var formattedDuration = duration ? " in " + took.toFixed(2) + " ms" : "";
-          var formattedAction = actionTransformer(action);
-          var message = "remote " + formattedAction.type + formattedTime + formattedDuration;
+          var formattedTime = " @ " + time.getHours() + ":" + pad(time.getMinutes()) + ":" + pad(time.getSeconds())
+          var formattedDuration = " in " + (contract.time.start - contract.time.end) + " ms"
+          var message = "remote " + action.type + formattedTime + formattedDuration
 
           if(groupable){ console.groupCollapsed(message) }
           console.log('resolved %i remotes', contract.resolved.length, contract.resolved)
