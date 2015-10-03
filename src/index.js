@@ -84,7 +84,7 @@ export function createRemote(remotes, config){
 
           var time = new Date()
           var formattedTime = " @ " + time.getHours() + ":" + pad(time.getMinutes()) + ":" + pad(time.getSeconds())
-          var formattedDuration = " in " + (contract.time.start - contract.time.end) + " ms"
+          var formattedDuration = " in " + (contract.time.end - contract.time.start) + " ms"
           var message = "remote " + action.type + formattedTime + formattedDuration
 
           if(groupable){ console.groupCollapsed(message) }
