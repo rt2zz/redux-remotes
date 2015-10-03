@@ -1,6 +1,6 @@
 {
   "name": "redux-remotes",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Remotes",
   "main": "lib/index.js",
   "scripts": {
